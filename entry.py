@@ -5,7 +5,6 @@ from datetime import datetime
 import datetime as datet
 from datetime import date
 
-__author__ = 'Yuditd Cumba'
 __host__ = 'https://dev.orca.accialcapital.com/api/integration/'
 token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk4QkFBQThDNjZFQTY5NTkiLCJrdHkiOiJSU0EifQ.eyJQYXJ0bmVySWQiOiIyMDZERjNERC05Qjc1LTRDNjAtOTFGNy1ERjQ1MzE4NUEzN0YiLCJleHAiOjE2MzQzMDA4OTgsImlhdCI6MTYwMjc2NDg5OCwianRpIjoiYjA1NGFhMDYtZGUzZC00MzcxLTlmZTYtZmQ4NTZjZjVhODlhIiwicm9sZSI6IlBhcnRuZXIifQ.UVKkfwED6DeAB_8Dx72nLRfZSQrms-2IJXYYYDJBbuJEAPphOsJdC5qM9Kp4RzzLIt5PIhet34nu3gyoll-Xylyor0DhW-g0UE1H_g7_ok8hKwU5ZkJ3Y-3vZnJz0GWKhSMPbts0Mfqxbdlh5gSMacj45vV1MHxtLnC9cULPLBe4ojZ7BDnpJDdia1zGZ6J2a_yG9wNTh8K4y8dDHUktLzH8LWdLOo_ROVYlE5ki58pxF7qQF2KIOGbnTWTB3zBLOgUGg8f2yzt5cMUaxr2Pu_i8aeeypNS7KLoVUTIHIxUYl0cKi6Wkrx9Onc-JdPDF_bo6l60JH9pvqiFNlgPKCg'
 __my_headers__ = {'Authorization' : 'Bearer '+  token}
@@ -82,7 +81,7 @@ def createBorrower(id):
         'countryId': countryId
     }
     resp = requests.post(url_format,  data=json.dumps(payload), headers=__my_headers__)
-    if ('id' in resp.json()):
+    if (resp.status_code == 201):
         result = resp.json()['id']
         click.echo("\nBorrower with id "+ id +" was created succesfully ✨")
         return result
@@ -105,7 +104,7 @@ def createApplications(borrowerId, externalApplicationId, applicationDate):
         'currencyId': currencyId, 
     }
     resp = requests.post(url_format,  data=json.dumps(payload), headers=__my_headers__)
-    if ('id' in resp.json()):
+    if (resp.status_code == 201):
         result = resp.json()
         click.echo("\nApplication with id "+ externalApplicationId +" was created succesfully ✨")
         return result
@@ -155,7 +154,7 @@ def createLoan(applicationId, externalLoanId, disbursementDate, currencyId):
         ]
     }
     resp = requests.post(url_format,  data=json.dumps(payload), headers=__my_headers__)
-    if ('id' in resp.json()):
+    if (resp.status_code == 201):
         result = resp.json()['id']
         click.echo("\nLoan with id "+ externalLoanId +" was created succesfully ✨")
         return result
@@ -168,7 +167,7 @@ def createPayment(loanId, paymentId, paymentDate):
     paymentDate = tomorrow(paymentDate)
     url_format = __host__ +'loans/'+loanId+'/payments'
     paymentId = '+'.join(paymentId.split())
-    payload = {
+    payload = json.dumps({
         "paymentId": paymentId,
         "paymentDate": paymentDate+"T23:15:02.292Z",
         "concepts": [
@@ -185,9 +184,9 @@ def createPayment(loanId, paymentId, paymentDate):
             "amount": 20
             },
         ]
-    }
-    resp = requests.post(url_format,  data=json.dumps(payload), headers=__my_headers__)
-    if ('payments' in resp.json()):
+    })
+    resp = requests.post(url_format,  data=payload, headers=__my_headers__)
+    if (resp.status_code == 201):
         click.echo("\nPayment with id "+ paymentId +" was created succesfully ✨")
     else:
        click.echo('Error 😬')
@@ -200,7 +199,7 @@ def main():
     """
     Simple CLI for querying and create 
     """
-    click.echo('\nBIENVENIDO TO YUDITD CUMBA CLI🤓 IF YOU NEED HELP USE --help')
+    click.echo('\nBIENVENIDO(A) TO ACCIAL CLI🤓 IF YOU NEED HELP USE --help')
     click.echo('------------------------------------------------------------\n')
     pass
 
