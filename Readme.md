@@ -14,3 +14,8 @@
 ## USAGE
 
 - **accialcli** 
+
+#### `search`
+
+##### `--help`
+![searchhelp.png](https://raw.githubusercontent.com/yud-cumba/accialcli/main/img/searchhelp.png)
